@@ -1,12 +1,21 @@
-import pytest
-from app import app
+import unittest
+import requests
+from app import predict
 
-@pytest.fixture
-def client():
-    with app.test_client() as client:
-        yield client
+class TestApp(unittest.TestCase):
+    def test_predict(self):
+        # Проверка функции predict()
+        # Подготавливаем изображение, используя PIL
+        image = prepare_image()
+        predicted_class = predict(image)
+        # Проверяем, что возвращенный класс находится в списке классов
+        self.assertIn(predicted_class, classes)
 
-def test_home_page(client):
-    response = client.get('/')
-    assert response.status_code == 200
-    assert b"Welcome to the AML Final Task App" in response.data
+    def test_app_availability(self):
+        # Проверка доступности приложения по ссылке
+        url = 'http://localhost:8501'  # Замените на вашу ссылку
+        response = requests.get(url)
+        self.assertEqual(response.status_code, 200)
+
+if __name__ == '__main__':
+    unittest.main()
