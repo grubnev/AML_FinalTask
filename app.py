@@ -1,13 +1,20 @@
 import streamlit as st
 import torch
-import torchvision.models as models
+import torch.nn as nn
+import torchvision
 import torchvision.transforms as transforms
 from PIL import Image
 
 # Загрузка модели
-model = models.resnet50()
+model = torchvision.models.resnet50(pretrained=False)  # Указываем pretrained=False, чтобы загрузить архитектуру без предварительно обученных весов
+model.fc = nn.Linear(model.fc.in_features, 10)  # Переопределяем последний слой с 1000 выходами на 10 выходов
+
+# Загрузка весов модели
 model.load_state_dict(torch.load('models/resnet50_cifar10.pth'))
 model.eval()
+
+# Список классов
+classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
 # Функция для предсказания
 def predict(image):
@@ -21,9 +28,9 @@ def predict(image):
     with torch.no_grad():
         output = model(image)
     _, predicted = output.max(1)
-    return predicted.item()
+    return predicted.item(), classes[predicted.item()]
 
-st.title('Image Classification with ResNet-50')
+st.title('Image Classification')
 uploaded_file = st.file_uploader("Choose an image...", type="jpg")
 
 if uploaded_file is not None:
@@ -31,5 +38,5 @@ if uploaded_file is not None:
     st.image(image, caption='Uploaded Image.', use_column_width=True)
     st.write("")
     st.write("Classifying...")
-    label = predict(image)
-    st.write(f'Prediction: {label}')
+    label_index, label_name = predict(image)
+    st.write(f'Prediction: {label_name} (class {label_index})')
