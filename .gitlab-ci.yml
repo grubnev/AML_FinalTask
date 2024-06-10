@@ -1,0 +1,29 @@
+stages:  # Определение стадий конвеера
+  - checkout
+  - install_dependencies
+  - run_tests
+  - build_docker_image
+  - deploy
+checkout:
+  stage: checkout
+  script:
+    - git clone https://github.com/grubnev/AML_FinalTask.git
+  artifacts:
+    paths:
+      - AML_FinalTask
+install:
+  stage: install
+  script:
+    - pip install -r AML_FinalTask/requirements.txt
+test:
+  stage: test
+  script:
+    - python -m unittest discover -s AML_FinalTask/src/tests
+build:
+  stage: build
+  script:
+    - docker build -t ml_pipeline_project:latest .
+deploy:
+  stage: deploy
+  script:
+    - docker run -p 8501:8501 ml_pipeline_project:latest
