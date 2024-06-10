@@ -7,4 +7,7 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
+# Установка pytest
+RUN pip install pytest
+
 CMD ["streamlit", "run", "app.py"]
