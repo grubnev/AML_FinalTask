@@ -2,9 +2,10 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Clone repository') {
             steps {
-                git 'https://github.com/grubnev/AML_FinalTask.git'
+                echo 'Cloning repository...'
+                git branch: 'CIFAR-100', url: 'https://github.com/grubnev/AML_FinalTask.git'
             }
         }
 
@@ -14,9 +15,21 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
+        stage('Run Data Quality Tests') {
+            agent {
+                docker { image 'python:3.8' }
+            }
             steps {
-                sh 'python -m unittest discover -s src/tests'
+                sh '/usr/local/bin/pytest tests/test_data_quality.py'
+            }
+        }
+
+        stage('Run Model Tests') {
+            agent {
+                docker { image 'python:3.8' }
+            }
+            steps {
+                sh '/usr/local/bin/pytest tests/test_model.py'
             }
         }
 
@@ -31,7 +44,21 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    docker.image('ml_pipeline_project:latest').run('-p 8501:8501')
+                    docker.image('ml_pipeline_project:latest').run('-d -p 8501:8501 --name ml_app')
+                }
+            }
+        }
+
+        stage('Run App Tests') {
+            steps {
+                sh '/usr/local/bin/pytest tests/test_app.py'
+            }
+        }
+
+        stage('Cleanup') {
+            steps {
+                script {
+                    sh 'docker stop ml_app && docker rm ml_app'
                 }
             }
         }
