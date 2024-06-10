@@ -23,12 +23,13 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            steps {
-                script {
-                    docker.image('ml_pipeline_project:latest').run('-p 8501:8501')
-                }
-            }
+stage('Deploy') {
+    steps {
+        script {
+            docker.image('ml_pipeline_project:latest').run('-p 8501:8501 --name ml_app --rm')
         }
+    }
+}
+
     }
 }
