@@ -6,15 +6,26 @@ import torchvision.transforms as transforms
 from PIL import Image
 
 # Загрузка модели
-model = torchvision.models.resnet50(pretrained=False)  # Указываем pretrained=False, чтобы загрузить архитектуру без предварительно обученных весов
-model.fc = nn.Linear(model.fc.in_features, 10)  # Переопределяем последний слой с 1000 выходами на 10 выходов
+model = torchvision.models.resnet50(pretrained=False)
+model.fc = nn.Linear(model.fc.in_features, 100)  # Изменяем количество выходных классов на 100 для CIFAR-100
 
 # Загрузка весов модели
-model.load_state_dict(torch.load('models/resnet50_cifar10.pth'))
+model.load_state_dict(torch.load('models/resnet50_cifar100.pth'))
 model.eval()
 
 # Список классов
-classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
+classes = (
+    'apple', 'aquarium_fish', 'baby', 'bear', 'beaver', 'bed', 'bee', 'beetle', 'bicycle', 'bottle', 'bowl', 'boy',
+    'bridge', 'bus', 'butterfly', 'camel', 'can', 'castle', 'caterpillar', 'cattle', 'chair', 'chimpanzee', 'clock',
+    'cloud', 'cockroach', 'couch', 'crab', 'crocodile', 'cup', 'dinosaur', 'dolphin', 'elephant', 'flatfish', 'forest',
+    'fox', 'girl', 'hamster', 'house', 'kangaroo', 'computer_keyboard', 'lamp', 'lawn_mower', 'leopard', 'lion',
+    'lizard', 'lobster', 'man', 'maple_tree', 'motorcycle', 'mountain', 'mouse', 'mushroom', 'oak_tree', 'orange',
+    'orchid', 'otter', 'palm_tree', 'pear', 'pickup_truck', 'pine_tree', 'plain', 'plate', 'poppy', 'porcupine',
+    'possum', 'rabbit', 'raccoon', 'ray', 'road', 'rocket', 'rose', 'sea', 'seal', 'shark', 'shrew', 'skunk', 'skyscraper',
+    'snail', 'snake', 'spider', 'squirrel', 'streetcar', 'sunflower', 'sweet_pepper', 'table', 'tank', 'telephone',
+    'television', 'tiger', 'tractor', 'train', 'trout', 'tulip', 'turtle', 'wardrobe', 'whale', 'willow_tree', 'wolf',
+    'woman', 'worm'
+)
 
 # Функция для предсказания
 def predict(image):
