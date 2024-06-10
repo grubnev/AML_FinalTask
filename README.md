@@ -32,4 +32,5 @@ git clone https://github.com/grubnev/AML_FinalTask.git
 pip install -r requirements.txt
 
 3. Запустите веб-приложение:
+   
 streamlit run app.py
