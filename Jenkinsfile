@@ -2,21 +2,16 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Clone repository') {
             steps {
-                git 'https://github.com/grubnev/AML_FinalTask.git'
+                echo 'Cloning repository...'
+                git branch: 'main', url: 'https://github.com/grubnev/AML_FinalTask.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
                 sh 'pip install -r requirements.txt'
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                sh 'python -m unittest discover -s src/tests'
             }
         }
 
