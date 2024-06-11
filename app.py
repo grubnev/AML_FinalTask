@@ -2,6 +2,7 @@ import streamlit as st
 from PIL import Image
 import torch
 import torch.nn as nn
+import torchvision
 import torchvision.transforms as transforms
 from io import BytesIO
 
