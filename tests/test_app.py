@@ -5,7 +5,7 @@ import io
 
 class TestApp(unittest.TestCase):
     def test_homepage(self):
-        response = requests.get("http://localhost:8501")
+        response = requests.get("http://127.0.0.1:8501")
         self.assertEqual(response.status_code, 200)
 
     def test_prediction(self):
