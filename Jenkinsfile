@@ -13,12 +13,9 @@ pipeline {
                 sh 'pip install -r requirements.txt'
             }
         }
-        stage('Run Data Quality Tests') {
-            agent {
-                docker { image 'python:3.8' }
-            }
+        stage('Data Quality Tests') {
             steps {
-                sh '/usr/local/bin/pytest tests/test_data_quality.py'
+                sh 'pytest tests/test_data_quality.py'
             }
         }
         stage('Build Docker Image') {
@@ -31,20 +28,13 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    docker.image('ml_pipeline_project:latest').run('-d -p 8501:8501 --name ml_app')
+                    docker.image('ml_pipeline_project:latest').run('-p 8501:8501 --name ml_app --rm')
                 }
             }
         }
-        stage('Run App Tests') {
+        stage('Application Tests') {
             steps {
-                sh '/usr/local/bin/pytest tests/test_app.py'
-            }
-        }
-        stage('Cleanup') {
-            steps {
-                script {
-                    sh 'docker stop ml_app && docker rm ml_app'
-                }
+                sh 'pytest tests/test_app.py'
             }
         }
     }
