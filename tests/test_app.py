@@ -1,5 +1,7 @@
 import unittest
 import requests
+from PIL import Image
+import io
 
 class TestApp(unittest.TestCase):
     def test_homepage(self):
@@ -8,7 +10,9 @@ class TestApp(unittest.TestCase):
 
     def test_prediction(self):
         url = "http://localhost:8501/predict"
-        files = {'file': open('tests/sample_image.jpg', 'rb')}
-        response = requests.post(url, files=files)
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("prediction", response.json())
+        image_path = 'tests/sample_image.jpg'
+        with open(image_path, 'rb') as img:
+            files = {'file': img}
+            response = requests.post(url, files=files)
+            self.assertEqual(response.status_code, 200)
+            self.assertIn("Prediction: ", response.text)
