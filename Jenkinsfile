@@ -15,6 +15,12 @@ pipeline {
             }
         }
 
+        stage('Data Quality Tests') {
+            steps {
+                sh 'pytest tests/test_data_quality.py'
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
@@ -23,13 +29,24 @@ pipeline {
             }
         }
 
-stage('Deploy') {
-    steps {
-        script {
-            docker.image('ml_pipeline_project:latest').run('-p 8501:8501 --name ml_app --rm')
+        stage('Deploy') {
+            steps {
+                script {
+                    docker.image('ml_pipeline_project:latest').run('-p 8501:8501 --name ml_app --rm')
+                }
+            }
         }
-    }
-}
 
+        stage('Application Tests') {
+            steps {
+                sh 'pytest tests/test_app.py'
+            }
+        }
+
+        stage('Model Tests') {
+            steps {
+                sh 'pytest tests/test_model.py'
+            }
+        }
     }
 }
