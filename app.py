@@ -1,15 +1,13 @@
 import streamlit as st
+from PIL import Image
 import torch
 import torch.nn as nn
-import torchvision
 import torchvision.transforms as transforms
-from PIL import Image
+from io import BytesIO
 
 # Загрузка модели
-model = torchvision.models.resnet50(pretrained=False)  # Указываем pretrained=False, чтобы загрузить архитектуру без предварительно обученных весов
-model.fc = nn.Linear(model.fc.in_features, 10)  # Переопределяем последний слой с 1000 выходами на 10 выходов
-
-# Загрузка весов модели
+model = torchvision.models.resnet50(pretrained=False)
+model.fc = nn.Linear(model.fc.in_features, 10)
 model.load_state_dict(torch.load('models/resnet50_cifar10.pth'))
 model.eval()
 
@@ -30,6 +28,7 @@ def predict(image):
     _, predicted = output.max(1)
     return predicted.item(), classes[predicted.item()]
 
+# Streamlit UI
 st.title('Image Classification')
 uploaded_file = st.file_uploader("Choose an image...", type="jpg")
 
@@ -40,3 +39,15 @@ if uploaded_file is not None:
     st.write("Classifying...")
     label_index, label_name = predict(image)
     st.write(f'Prediction: {label_name} (class {label_index})')
+
+# API endpoint for predictions
+def prediction_endpoint():
+    if st.sidebar.button("Run API"):
+        with open("test_image.jpg", "rb") as file:
+            img_bytes = file.read()
+        img = Image.open(BytesIO(img_bytes))
+        index, label = predict(img)
+        st.write(f'API Prediction: {label} (class {index})')
+
+st.sidebar.header("API Testing")
+prediction_endpoint()
