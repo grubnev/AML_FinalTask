@@ -2,8 +2,8 @@ import pytest
 import torch
 from torchvision.models import resnet50
 
-RESNET50_CIFAR10_PATH = "models/resnet50_cifar10.pth.dvc"
-RESNET50_CIFAR100_PATH = "models/resnet50_cifar100.pth.dvc"
+RESNET50_CIFAR10_PATH = "models/resnet50_cifar10.pth"
+RESNET50_CIFAR100_PATH = "models/resnet50_cifar100.pth"
 
 @pytest.fixture
 def model():
