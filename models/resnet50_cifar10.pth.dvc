@@ -1,0 +1,5 @@
+outs:
+- md5: cfef3f89c2010f2715436d01bebfcca6
+  size: 94430102
+  hash: md5
+  path: resnet50_cifar10.pth
