@@ -8,7 +8,7 @@ class TestApp(unittest.TestCase):
 
     def test_prediction(self):
         url = "http://localhost:8501/predict"
-        files = {'file': open('tests/sample_image.png', 'rb')}
+        files = {'file': open('tests/sample_image.jpg', 'rb')}
         response = requests.post(url, files=files)
         self.assertEqual(response.status_code, 200)
         self.assertIn("prediction", response.json())
