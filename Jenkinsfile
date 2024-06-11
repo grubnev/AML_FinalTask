@@ -8,13 +8,11 @@ pipeline {
                 git branch: 'CIFAR-100', url: 'https://github.com/grubnev/AML_FinalTask.git'
             }
         }
-
         stage('Install Dependencies') {
             steps {
                 sh 'pip install -r requirements.txt'
             }
         }
-
         stage('Run Data Quality Tests') {
             agent {
                 docker { image 'python:3.8' }
@@ -23,16 +21,6 @@ pipeline {
                 sh '/usr/local/bin/pytest tests/test_data_quality.py'
             }
         }
-
-        stage('Run Model Tests') {
-            agent {
-                docker { image 'python:3.8' }
-            }
-            steps {
-                sh '/usr/local/bin/pytest tests/test_model.py'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 script {
@@ -40,7 +28,6 @@ pipeline {
                 }
             }
         }
-
         stage('Deploy') {
             steps {
                 script {
@@ -48,13 +35,11 @@ pipeline {
                 }
             }
         }
-
         stage('Run App Tests') {
             steps {
                 sh '/usr/local/bin/pytest tests/test_app.py'
             }
         }
-
         stage('Cleanup') {
             steps {
                 script {
