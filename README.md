@@ -26,7 +26,7 @@
 <details>
    # Pipeline Jenkins
 <picture>
-<img src="https://user-images.githubusercontent.com/25423296/163456779-a8556205-d0a5-45e2-ac17-42d089e3c3f8.png">
+<img src="https://raw.githubusercontent.com/grubnev/AML_FinalTask/CIFAR-10/AML_FinalTask%20%2340%20Pipeline%20steps%20%5BJenkins%5D.jpg">
 </picture>
 </details>
 
